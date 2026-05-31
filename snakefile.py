@@ -8,6 +8,7 @@ Snakefile for pigx-scrnaseq pipeline
 import glob
 import os
 import re
+import shutil
 import subprocess
 import yaml
 import csv
@@ -48,7 +49,7 @@ ADAPTER_PARAMETERS = config['adapter_parameters']
 STAR_OUTPUT_TYPES_KEYS = ['Gene', 'GeneFull', 'Velocyto', 'Velocyto']
 STAR_OUTPUT_TYPES_VALS = ['Counts', 'GeneFull', 'Spliced', 'Unspliced']
 # This is a relict variable
-STAR_OUTPUT_TYPES = list(set(STAR_OUTPUT_TYPES_KEYS))
+STAR_OUTPUT_TYPES = sorted(set(STAR_OUTPUT_TYPES_KEYS))
 
 # ----------------------------------------------------------------------------- #
 # PATHS
@@ -641,6 +642,11 @@ rule map_star:
         cb_adapter  = adapter_params(params.name, 'cell_barcode')
         umi_adapter = adapter_params(params.name, 'umi_barcode')
         infiles = " ".join([str(input.reads), str(input.barcode)])
+
+        # STAR aborts if the Solo.out directory from a previous run exists
+        solo_dir = os.path.join(params.outpath, params.name) + '_Solo.out'
+        if os.path.exists(solo_dir):
+            shutil.rmtree(solo_dir)
 
         command = " ".join([
             params.star,

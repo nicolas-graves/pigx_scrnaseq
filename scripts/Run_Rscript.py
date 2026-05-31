@@ -5,6 +5,9 @@ run:
     RunRscript(input, output, params, 'SCRIPT.R')
 """
 
+import json
+import os
+
 def RunRscript(input, output, params, path_script, script):
 
     # if isinstance(input, list):

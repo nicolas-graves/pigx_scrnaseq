@@ -66,7 +66,7 @@ def get_adapter_size(name):
 def get_app_params(app_name):
     app_return = subprocess.check_output(SOFTWARE[app_name]['executable'] +' '+ SOFTWARE[app_name]['help'], shell=True)
     app_return = str(app_return)
-    vals = list(set(re.findall('^(\-{1,2}[a-zA-Z][\w\-]*)\W' , app_return)))
+    vals = list(set(re.findall(r'^(\-{1,2}[a-zA-Z][\w\-]*)\W' , app_return)))
     keys = [re.sub('^-+','',i) for i in vals]
     args = dict(zip(keys, vals))
     return(args)
@@ -77,7 +77,7 @@ def get_app_params(app_name):
 def get_star_params():
     app_return = subprocess.check_output(SOFTWARE['STAR']['executable'] +' '+ SOFTWARE['STAR']['help'], shell=True)
     app_return = str(app_return)
-    keys = list(set(re.findall('\\\\n([a-zA-Z]+)\W' , app_return)))
+    keys = list(set(re.findall(r'\\n([a-zA-Z]+)\W' , app_return)))
     vals = ['--' + i for i in keys]
     args = dict(zip(keys, vals))
     return(args)
